@@ -44,7 +44,33 @@ class tele2
         //массив полейsql для проверки уникальности
         $this->uniquefields = ["datetime", "phone", "phone2"];
     }
+    //----------------------------------
+    function call($source = "", $destination = "")
+    {
+        $ch = curl_init();        
+        $request = "https://ats2.tele2.ru/crm/openapi/call/outgoing?destination=".$destination."&source=".$source;
+        
+        $this->debug->addlog("Запрос: " . print_r($request, true));
 
+        curl_setopt($ch, CURLOPT_URL, $request);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        $headers = [
+            'Accept: application/json',
+            'Authorization: ' . $this->gettoken()
+        ];
+
+        $this->debug->addlog("Сформированы заголовки: " . print_r($headers, true));
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $server_output = curl_exec($ch);
+        curl_close($ch);
+        $this->debug->addlog("Ответ: " . print_r($server_output, true));
+        $result = json_decode($server_output);        
+    }    
+    //----------------------------------
     function getStatistics($start = "", $end = "")
     {
         $ch = curl_init();
@@ -106,7 +132,7 @@ class tele2
         echo __NAMESPACE__ . get_class();
         return json_decode($server_output);
     }
-
+    //------------------------------------
     function tokensdialog()
     {
 
@@ -134,13 +160,12 @@ class tele2
 
         return $result;
     }
-
+    //------------------------------------
     function updatetoken($token, $type = "access")
     {
         file_put_contents($type . ".token.php", "/*" . $token . "*/");
     }
-
-
+    //------------------------------------
     function gettoken($type = "access")
     {
         return str_replace("/*", "", str_replace("*/", '', file_get_contents($type . ".token.php")));
@@ -150,7 +175,7 @@ class tele2
 
 
 
-
+    //------------------------------------
     function refreshtokens()
     {
 
@@ -187,7 +212,7 @@ class tele2
         }
         return false;
     }
-
+    //------------------------------------
     function converttime($value)
     {
 
@@ -195,13 +220,13 @@ class tele2
         echo "$value converted to $return";
         return $return;
     }
-
+    //------------------------------------
     function zodCdrOperator_id($value = "")
     {
 
         return 1;
     }
-
+    //------------------------------------
     function prepareheader($json)
     {
 
@@ -237,7 +262,7 @@ class tele2
         return $table;
     }
 
-
+    //------------------------------------
     function calltype($value = "")
     {
 
@@ -245,7 +270,7 @@ class tele2
     }
 
 
-
+    //------------------------------------
     function callstatus($value = "")
     {
 
@@ -275,7 +300,7 @@ class tele2
         }
     }
 
-
+    //------------------------------------
     function zod($value="")
     {
         return 1;

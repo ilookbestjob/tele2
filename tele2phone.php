@@ -14,6 +14,9 @@ switch ($_GET["action"]) {
     case "get":
         $tele2->getStatistics(isset($_GET['start'])?$_GET['start']:"",isset($_GET['end'])?$_GET['end']:"");
         break;
+    case "call":
+        $tele2->call(isset($_GET['source'])?$_GET['source']:"",isset($_GET['destination'])?$_GET['destination']:"");
+        break;
     case  "updatetokens":
           if ($_GET["access"] != "") {
 
