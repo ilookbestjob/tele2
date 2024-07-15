@@ -258,7 +258,7 @@ class tele2
             $table .= "</tr>";
         }
 
-        $table .= "</table";
+        $table .= "</table>";
         return $table;
     }
 
